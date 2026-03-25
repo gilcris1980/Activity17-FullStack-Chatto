@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GILCRIS REGISTER // ACT17</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .reg-container {
+            border: 2px solid #00ff41;
+            padding: 30px;
+            box-shadow: 0 0 15px #00ff41;
+            background: rgba(0, 0, 0, 0.9);
+            width: 400px;
+        }
+        h2 { text-align: center; border-bottom: 1px solid #00ff41; padding-bottom: 10px; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #000;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #00ff41;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover { background: #008f11; }
+        #status-msg { margin-top: 15px; text-align: center; font-size: 0.85em; }
+        .links { margin-top: 15px; font-size: 0.8em; text-align: center; }
+        a { color: #00ff41; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="reg-container">
+        <h2>New_User_Entry</h2>
+        <form id="regForm">
+            <label>Username:</label>
+            <input type="text" id="username" required placeholder="gilcris_hacker">
+            <label>Email_Link:</label>
+            <input type="email" id="email" required placeholder="user@domain.com">
+            <label>Secure_Pass:</label>
+            <input type="password" id="password" required placeholder="********">
+            <button type="submit">INITIALIZE_DATA_ENTRY</button>
+        </form>
+        <div id="status-msg"></div>
+        <div class="links">
+            Existing identity? <a href="login.html">[Back_to_Login]</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('status-msg');
+            status.innerText = "UPLOADING_DATA...";
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('http://localhost:5000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    status.innerHTML = "SUCCESS: " + data.message;
+                    status.style.color = "#00ff41";
+                } else {
+                    status.innerHTML = "ERROR: " + data.message;
+                    status.style.color = "#ff0000";
+                }
+            } catch (err) {
+                status.innerHTML = "SYSTEM_FAILURE: Link lost.";
+            }
+        });
+    </script>
+</body>
+</html>
